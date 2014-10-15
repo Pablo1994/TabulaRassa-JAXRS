@@ -1,0 +1,12 @@
+{ equipos: 
+	#foreach(${team} in ${teams})
+	{
+	_id: ${team}.id,
+	nombre: ${team}.name,
+	win: ${team}.win,
+	lose: ${team}.lose,
+	tie: ${team}.tie,
+	fav: ${team}.fav,
+	con: ${team}.con,
+	}
+}

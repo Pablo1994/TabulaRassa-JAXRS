@@ -1,0 +1,20 @@
+package com.dao;
+import java.util.*;
+
+import com.model.Equipo;
+
+public class TeamDAO{
+  private List<Equipo> equipos= new ArrayList<Equipo>();
+  
+  public TeamDAO(){
+  }
+
+  public void findAllTeams(){
+
+  }
+  public void open(){
+        
+  }
+  public void close(){
+  }
+}

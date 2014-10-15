@@ -1,0 +1,120 @@
+<!-- 
+   Modelo para Pre y Compilacion de Web sobre TOMCAT 
+   loriacarlos@gmail.com
+-->
+<project name="WebPreCompilation-War" 
+         default="all" 
+		 basedir="."> 
+<!-- 
+ Referencias
+ Ant
+   http://ant.apache.org/manual/running.html
+   http://ant.apache.org/manual/index.html 
+ Jasper Compiler
+   http://tomcat.apache.org/tomcat-6.0-doc/api/org/apache/jasper/JspC.html
+   Para jspc como command line tool:
+   http://docs.oracle.com/cd/E19146-01/821-0790/abxcc/index.html
+ 
+-->
+  <property name="webapp.name" value="TabulaRassa" />
+  <property name="webapp.path" value="./webapp/" />
+  <property name="dev.path" value="." />
+  
+  <property name="tomcat.home" value="/opt/apache-tomee-jaxrs-1.6.0.2" />
+  <!-- <property name="tomcat.home" value="C:/xampp/tomcat" /> -->
+  <!-- Para compilar JSP -->
+  <!--
+  <target name="jspc"> 
+
+    <taskdef classname="org.apache.jasper.JspC" name="jasper2" > 
+      <classpath id="jspc.classpath"> 
+        <pathelement location="${java.home}/../lib/tools.jar"/> 
+        <fileset dir="${tomcat.home}/lib"> 
+          <include name="*.jar"/> 
+        </fileset> 
+      </classpath> 
+    </taskdef> 
+
+    <jasper2 
+             validateXml="false" 
+             uriroot="${webapp.path}" 
+             webXmlFragment="${webapp.path}/WEB-INF/generated_web.xml" 
+             outputDir="${dev.path}/src" /> 
+
+  </target> 
+  -->
+  <target name="compile">
+
+    <mkdir dir="${webapp.path}/WEB-INF/classes"/>
+    <mkdir dir="${webapp.path}/WEB-INF/lib"/>
+
+    <javac destdir="${webapp.path}/WEB-INF/classes"
+           optimize="off"
+	   includeantruntime="false"
+           debug="on" failonerror="false"
+           srcdir="${dev.path}/src" 
+	       excludes="**/*.smap">
+      <classpath>
+        <pathelement location="${webapp.path}/WEB-INF/classes"/>
+		<!-- Libs propias -->
+        <fileset dir="${webapp.path}/WEB-INF/lib">
+          <include name="*.jar"/>
+        </fileset>
+		<!-- Libs de TOMCAT -->
+		<fileset dir="${tomcat.home}/lib"> 
+          <include name="*.jar"/> 
+        </fileset> 
+		<!-- Libs o classes externas-->
+	    
+      </classpath>
+      <include name="**" />
+      <exclude name="tags/**" />
+    </javac>
+
+  </target>
+  
+  <target name="deploy" depends="war">
+    <copy tofile="${tomcat.home}/webapps/${webapp.name}.war">
+    <fileset dir="${dev.path}/dist">
+	  <include name="${webapp.name}.war"/>
+    </fileset> 	  
+	</copy>
+  </target>
+  
+  <target name="init">
+    <mkdir dir="${dev.path}/dist"/>
+    <mkdir dir="${dev.path}/build"/>
+  </target>
+  <target name="clean">
+    <delete dir="${dev.path}/dist"/>
+    <delete dir="${dev.path}/build"/>
+  </target>
+
+  <target name="war" depends="compile">
+    <copy includeemptydirs="false" todir="${webapp.path}" flatten="true">
+		<fileset dir="${dev.path}">
+		   <include name="html/*.html"/>    
+		</fileset>
+	</copy>
+	<war destfile="dist/${webapp.name}.war" 
+	     webxml="${dev.path}/web.xml">
+		<fileset dir="${webapp.path}"/>
+		<lib dir="${webapp.path}/WEB-INF/lib"/>
+		<classes dir="${webapp.path}/WEB-INF/classes"/>
+		<zipfileset dir="${dev.path}" prefix="">
+		   <include name="css/*.css"/>
+		   <include name="js/*.js"/>
+		   <include name="images/*.png"/>
+		   <include name="images/*.jpg"/>
+		   <include name="js/MVC/*.js"/>
+		   <include name="jquery-ui-1.10.4.custom/js/*js"/>
+		   <include name="jquery-ui-1.10.4.custom/css/smoothness/ui-1.10.4.custom.min.css"/>
+		   <include name="jquery-ui-1.10.4.custom/css/smoothness/images/*.gif"/>
+		   <include name="jquery-ui-1.10.4.custom/css/smoothness/images/*.png"/>
+		</zipfileset>
+	</war>
+  </target>
+  
+  <target name="all" depends="compile">
+  </target>
+</project>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <!--    register servlet    -->
+    <servlet>
+        <servlet-name>ServletDatos</servlet-name>
+        <servlet-class>org.superbiz.rest.BringingService</servlet-class>
+		<init-param>
+           <param-name>daoType</param-name>
+           <param-value>TeamMongoDAO</param-value>
+	   <param-name>daoType</param-name>
+           <param-value>CampDAO</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ServletDatos</servlet-name>
+        <url-pattern>/ServletDatos/*</url-pattern>
+    </servlet-mapping>
+    
+    <!--    mapping all .vm files to velocity servlets  -->
+    <servlet>
+        <servlet-name>velocity</servlet-name>
+        <servlet-class>org.apache.velocity.tools.view.servlet.VelocityViewServlet</servlet-class>
+        
+        <init-param>
+		    <!--    load my toolbox 
+             <param-name>org.apache.velocity.toolbox</param-name>
+             <param-value>/WEB-INF/toolbox.xml</param-value>
+			-->
+			 <param-name>org.apache.velocity.properties</param-name>
+             <param-value>/WEB-INF/velocity.properties</param-value>
+        </init-param>
+		
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>velocity</servlet-name>
+        <url-pattern>*.vm</url-pattern>
+    </servlet-mapping>
+    
+    <!--    session timeout -->
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    
+    <!--    welcome file    -->
+    <welcome-file-list>
+        <welcome-file>velocity.service</welcome-file>
+    </welcome-file-list>
+    
+
+    
+</web-app>
